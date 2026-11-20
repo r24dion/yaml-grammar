@@ -1,0 +1,101 @@
+---
+
+- item1
+- item2
+- "item3 in quotes"
+- item4
+- True
+
+- {name: "John", age: 30.5}
+- {name: "Alice", age: 25}
+
+- [one, two, three, "four in quotes"]
+
+- name: Complex structure
+  vars:
+    services:
+      - name: nginx
+        ports: [80, 443]
+      - name: redis
+        ports: [6379]
+  tasks:
+    - name: Print service info
+      debug:
+        msg: "Service {{ item.name }} ports: {{ item.ports }}"
+      loop: "{{ services }}"
+
+- name: Final task
+  include_tasks: final.yml
+
+---
+
+literal_block: |
+  This entire block of text will be the value
+  with line breaks preserved.
+  The indentation will be stripped from each line.
+
+folded_block: >
+  This will be all one string
+  with line feeds converted to spaces.
+  But blank lines remain as newlines.
+
+nested_sequences:
+  - 
+    - A
+    - B
+  - 
+    - C
+    - D
+
+defaults: &default_settings
+  timeout: 30
+  max_retries: 3
+  logging: true
+
+service_one:
+  <<: *default_settings
+  name: Service Alpha
+  port: 8080
+
+service_two:
+  <<: *default_settings
+  name: Service Beta
+  port: 8081
+
+---
+
+users:
+  - name: Bob
+    roles: [admin, user]
+    active: true
+  - name: Carol
+    roles: [editor, user]
+    active: False
+
+settings:
+  database:
+    host: "localhost"
+    port: 5432
+  in1:
+    in2:
+      in3:
+        in4:
+          in5:
+            in6:
+              in7:
+                in8: {text: test, another_test: "Hello, World!"}
+
+tasks:
+  - task: "Install packages"
+    enabled: false
+    packages: ["nginx", "postgresql", "fail2ban"]
+  - task: "Configure firewall"
+    enabled: "False"
+  - task: "Start services"
+    enabled: True
+
+explicit_types:
+  !!str 12345: "This is string key"
+  !!float 42: "Float key"
+  !!timestamp "2025-01-01": "Date key"
+  !!binary "SGVsbG8=": "Base64 encoded"
